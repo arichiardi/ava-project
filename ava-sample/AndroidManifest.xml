@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.andrearichiardi.android.avasample"
+    android:versionCode="001"
+    android:versionName="0.0.1-SNAPSHOT" >
+
+    <uses-sdk android:minSdkVersion="3" />
+
+    <receiver android:name="ExampleAppWidgetProvider" >
+        <intent-filter>
+            <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+                   android:resource="@xml/example_appwidget_info" />
+    </receiver>
+
+</manifest>

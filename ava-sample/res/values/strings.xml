@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ExampleAppWidgetProvider</string>
+    <string name="text1">Example App Widget Text1</string>
+    <string name="text2">Example App Widget Text2</string>
+</resources>
