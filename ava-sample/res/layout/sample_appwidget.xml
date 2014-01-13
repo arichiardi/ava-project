@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:abp="http://schemas.android.com/apk/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:padding="@dimen/widget_margin" xmlns:app="http://schemas.android.com/apk/res/com.andrearichiardi.android.avasample">
@@ -10,28 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        app:flipInterval="5"
-        app:autoStart="false">
-
-        <TextView
-            android:id="@+id/view1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/green_grad_linear1"
-            android:text="@string/text1"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/view2"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@drawable/green_grad_linear2"
-            android:text="@string/text2"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        abp:flipInterval="5"
+        abp:autoStart="false">
     </com.andrearichiardi.android.avabackport.widget.AdapterViewFlipper>
     
     <Button

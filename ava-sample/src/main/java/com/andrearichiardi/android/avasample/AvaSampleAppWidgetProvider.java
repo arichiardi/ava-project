@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class ExampleAppWidgetProvider extends AppWidgetProvider {
+public class AvaSampleAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -18,7 +18,7 @@ public class ExampleAppWidgetProvider extends AppWidgetProvider {
             int appWidgetId = appWidgetIds[i];
 
             // Create an Intent to launch ExampleActivity
-            Intent intent = new Intent(context, ExampleAppWidgetProvider.class);
+            Intent intent = new Intent(context, AvaSampleAppWidgetProvider.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
             // Get the layout for the App Widget and attach an on-click listener
