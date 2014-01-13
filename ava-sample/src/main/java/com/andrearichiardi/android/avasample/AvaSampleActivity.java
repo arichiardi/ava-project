@@ -30,7 +30,7 @@ public class AvaSampleActivity extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        Debug.waitForDebugger();
+        //Debug.waitForDebugger();
         setContentView(R.layout.sample_layout);
 
         mFlipper=(AdapterViewFlipper)findViewById(R.id.flipper);
