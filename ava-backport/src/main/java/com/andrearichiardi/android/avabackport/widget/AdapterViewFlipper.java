@@ -16,11 +16,7 @@
 
 package com.andrearichiardi.android.avabackport.widget;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -29,20 +25,21 @@ import android.widget.Adapter;
 import android.widget.RemoteViews.RemoteView;
 import android.widget.ViewAnimator;
 
-import com.andrearichiardi.android.avabackport.R;
-
 
 /**
  * Simple {@link ViewAnimator} that will animate between two or more views
  * that have been added to it.  Only one child is shown at a time.  If
  * requested, can automatically flip between each child at a regular interval.
- *
+ * <p>
+ * Even if the class is marked with the RemoteView Annotation, it seems not to work inside App widgets.
+ * Therefore the BroadcastReceiver feature has been commented out.
+ * 
  * @attr ref R.styleable#AdapterViewFlipper_flipInterval
  * @attr ref R.styleable#AdapterViewFlipper_autoStart
  */
 @RemoteView
 public class AdapterViewFlipper extends AdapterViewAnimator {
-    private static final String TAG = "ViewFlipper";
+    private static final String TAG = "com.andrearichiardi.android.widget.AdapterViewFlipper";
     private static final boolean LOGD = false;
 
     private static final int DEFAULT_INTERVAL = 10000;
@@ -60,22 +57,55 @@ public class AdapterViewFlipper extends AdapterViewAnimator {
         super(context);
     }
 
+    /**
+     * Interesting note for Android developers follows.
+     * <p>
+     * The only way to correctly read attributes' value was to iterate on the
+     * {@link android.util.AttributeSet} and compare the result of <code>getAttributeName()</code>
+     * with the actual name of the attribute itself from inside this constructor.
+     * The normal <code>obtainStyledAttributes(attrs, R.styleable.AdapterViewFlipper)</code>
+     * did not work.
+     * <p>
+     * While using the following:
+     * <code>
+     * int count = attrs.getAttributeCount();<br/>
+     * for(int i = 0; i < count; i++){<br/>
+     * &nbspString attrName = attrs.getAttributeName(i);<br/>
+     * &nbspint attrRes = attrs.getAttributeNameResource(i);<br/>
+     * &nbspLog.v(TAG, "#" + i + " " + attrName + " " + attrRes);<br/>
+     * }<br/>
+     * </code>
+     * I had:
+     * <code>
+     * 01-13 03:01:11.625: V/AdapterViewFlipper(1236): #0 gravity 16842927<br/>
+     * 01-13 03:01:11.625: V/AdapterViewFlipper(1236): #1 id 16842960<br/>
+     * 01-13 03:01:11.625: V/AdapterViewFlipper(1236): #2 layout_width 16842996<br/>
+     * 01-13 03:01:11.635: V/AdapterViewFlipper(1236): #3 layout_height 16842997<br/>
+     * 01-13 03:01:11.635: V/AdapterViewFlipper(1236): #4 layout_centerHorizontal 16843152<br/>
+     * 01-13 03:01:11.635: V/AdapterViewFlipper(1236): #5 flipInterval 0<br/>
+     * 01-13 03:01:11.635: V/AdapterViewFlipper(1236): #6 autoStart 0<br/>
+     * </code>
+     */
     public AdapterViewFlipper(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        
         int count = attrs.getAttributeCount();
-        boolean b = attrs.getAttributeBooleanValue(R.styleable.AdapterViewFlipper_autoStart, true);
-        int v = attrs.getAttributeIntValue(R.styleable.AdapterViewFlipper_flipInterval, DEFAULT_INTERVAL);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AdapterViewFlipper);
-        mFlipInterval = a.getInt(R.styleable.AdapterViewFlipper_flipInterval, DEFAULT_INTERVAL);
-        mAutoStart = a.getBoolean(R.styleable.AdapterViewFlipper_autoStart, false);
+        for(int i = 0; i < count; i++) {
+            String attrName = attrs.getAttributeName(i);
+            int attrRes = attrs.getAttributeNameResource(i);
+            Log.v(TAG, "#" + i + " " + attrName + " " + attrRes);
+            if (attrName.equals("flipInterval")) {
+                mFlipInterval = attrs.getAttributeIntValue(i, DEFAULT_INTERVAL);
+            } else if (attrName.equals("autoStart")) {
+                mAutoStart = attrs.getAttributeBooleanValue(i, false);
+            }
+         }
 
         // A view flipper should cycle through the views
         mLoopViews = true;
-
-        a.recycle();
     }
 
+    /* AR - feature commented out
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -88,17 +118,18 @@ public class AdapterViewFlipper extends AdapterViewAnimator {
                 updateRunning(false);
             }
         }
-    };
+    };*/
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         // Listen for broadcasts related to user-presence
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        getContext().registerReceiver(mReceiver, filter);
+        // AR - feature commented out.
+        //final IntentFilter filter = new IntentFilter();
+        //filter.addAction(Intent.ACTION_SCREEN_OFF);
+        //filter.addAction(Intent.ACTION_USER_PRESENT);
+        //getContext().registerReceiver(mReceiver, filter);
 
         if (mAutoStart) {
             // Automatically start when requested
@@ -110,8 +141,8 @@ public class AdapterViewFlipper extends AdapterViewAnimator {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mVisible = false;
-
-        getContext().unregisterReceiver(mReceiver);
+        // AR - feature commented out.
+        //getContext().unregisterReceiver(mReceiver);
         updateRunning();
     }
 

@@ -11,8 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        abp:flipInterval="5000"
-        abp:autoStart="true" />
+        abp:flipInterval="500"
+        abp:autoStart="true"
+        abp:loopViews="true"
+        abp:animateFirstView="true"
+        abp:inAnimation="@drawable/slide_in_right"
+        abp:outAnimation="@drawable/slide_out_left"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,6 +25,12 @@
         android:layout_centerHorizontal="true"
         android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/flipIntervalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
+        
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
@@ -34,6 +44,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/checkbox" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -59,27 +59,44 @@
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
             </plugin>
-
             <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>maven-replacer-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <description>${project.description}</description>
+                    <verbose>true</verbose>
+                </configuration>
                 <executions>
                     <execution>
-                        <phase>process-sources</phase>
                         <goals>
-                            <goal>replace</goal>
+                            <goal>jar</goal>
                         </goals>
+                        <phase>package</phase>
                     </execution>
                 </executions>
-                <configuration>
-                    <ignoreMissingFile>false</ignoreMissingFile>
-                    <file>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</file>
-                    <outputFile>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</outputFile>
-                    <regex>false</regex>
-                    <token>static final int</token>
-                    <value>static int</value>
-                </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- <plugin> <groupId>com.google.code.maven-replacer-plugin</groupId> 
+                <artifactId>maven-replacer-plugin</artifactId> <executions> <execution> <phase>process-sources</phase> 
+                <goals> <goal>replace</goal> </goals> </execution> </executions> <configuration> 
+                <ignoreMissingFile>false</ignoreMissingFile> <file>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</file> 
+                <outputFile>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</outputFile> 
+                <regex>false</regex> <token>static final int</token> <value>static int</value> 
+                </configuration> </plugin> -->
         </plugins>
     </build>
 

@@ -37,8 +37,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <android.version>4.0.1.2</android.version>
+        <android.platform>14</android.platform>
+        <!-- API 14 is needed for the supporting objectAnimator syntax
         <android.platform>3</android.platform>
-        <android.version>1.5_r3</android.version>
+        <android.version>1.5_r3</android.version> -->
         <nineoldandroids.version>2.4.0</nineoldandroids.version>
     </properties>
 

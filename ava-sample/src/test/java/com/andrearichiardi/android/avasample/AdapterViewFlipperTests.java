@@ -48,13 +48,25 @@ public class AdapterViewFlipperTests {
     @Test
     public void shouldFlipIntervalFalse() {
         int flipInterval = mActivity.getFlipperFlipInterval();
-        assertThat(flipInterval).isEqualTo(5);
+        assertThat(flipInterval).isEqualTo(5000);
 
     }
     
     @Test
-    public void shouldAutostartBeFalse() {
-        boolean autoStart = mActivity.getFlipperAutostart();
-        assertThat(autoStart).isEqualTo(true);
+    public void shouldAutostartBeTrue() {
+        boolean b = mActivity.getFlipperAutostart();
+        assertThat(b).isEqualTo(true);
+    }
+    
+    @Test
+    public void shouldLoopViewsBeTrue() {
+        boolean b = mActivity.getFlipperLoopViews();
+        assertThat(b).isEqualTo(true);
+    }
+    
+    @Test
+    public void shouldAnimateFirstTimeBeTrue() {
+        boolean b = mActivity.getFlipperAutostart();
+        assertThat(b).isEqualTo(true);
     }
 }

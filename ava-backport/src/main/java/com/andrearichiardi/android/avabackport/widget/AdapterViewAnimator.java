@@ -19,13 +19,13 @@ package com.andrearichiardi.android.avabackport.widget;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,24 +35,22 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
-import com.andrearichiardi.android.avabackport.R;
+import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorInflater;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * Base class for a <code>AdapterView</code> that will perform animations
  * when switching between its views.
- * 
- * The code has been taken from IceCream Sandwich (I would have preferred
- * HoneyComb) at the following link:
- * @see "https://android.googlesource.com/platform/frameworks/base/+/android-4.0.1_r1"
- * 
+ * <p>
+ * The code has been taken from the IceCream Sandwich code base.
+ * <p>
  * To keep things simple and avoid digging too much in Android's source, the
- * <code>RemoteViewsAdapter.RemoteAdapterConnectionCallback/code> implemetation has been removed.
+ * <code>RemoteViewsAdapter.RemoteAdapterConnectionCallback</code> implemetation has been removed.
+ * <p>
+ * The internal state of the AdapterView is inspected using reflection.
  * 
- * The internal state of the AdapterView is inspected on instance creation using
- * reflection.
- * 
+ * @see https://android.googlesource.com/platform/frameworks/base/+/android-4.0.1_r1
  * @author Andrea Richiardi
  * 
  * @attr ref R.styleable#AdapterViewAnimator_inAnimation
@@ -62,7 +60,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
  */
 public abstract class AdapterViewAnimator extends AdapterView<Adapter> implements Advanceable {
     
-    //private static final String TAG = "com.andrearichiardi.android.widget.AdapterViewAnimator";
+    private static final String TAG = "com.andrearichiardi.android.widget.AdapterViewAnimator";
 
     /**
      * For reflectively obtaining AdapterView's access
@@ -162,8 +160,8 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
     /**
      * In and out animations.
      */
-    ObjectAnimator mInAnimation;
-    ObjectAnimator mOutAnimation;
+    Animator mInAnimation;
+    Animator mOutAnimation;
 
     /**
      * Current touch state.
@@ -189,34 +187,45 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
         this(context, attrs, 0);
     }
 
+    /**
+     * Interesting note for Android developers follows.
+     * <p>
+     * The only way to correctly read attributes' value was to iterate on the
+     * {@link android.util.AttributeSet} and compare the result of <code>getAttributeName()</code>
+     * with the actual name of the attribute itself from inside this constructor.
+     * The normal <code>obtainStyledAttributes(attrs, R.styleable.AdapterViewFlipper)</code>
+     * did not work. See {@link com.andrearichiardi.android.avabackport.widget.AdapterViewFlipper#AdapterViewFlipper(Context context, AttributeSet attrs)}.
+     */
     public AdapterViewAnimator(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        
-        // Not needed - Direct access through Resources.getSystem()
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.AdapterViewAnimator, defStyleAttr, 0);
-        
-        int resource = a.getResourceId(
-                R.styleable.AdapterViewAnimator_inAnimation, 0);
-        if (resource > 0) {
-            setInAnimation(context, resource);
-        } else {
-            setInAnimation(getDefaultInAnimation());
+
+        int count = attrs.getAttributeCount();
+        for(int i = 0; i < count; i++) {
+            String attrName = attrs.getAttributeName(i);
+            int attrRes = attrs.getAttributeNameResource(i);
+            Log.v(TAG, "Attribute #" + i + " : " + attrName + " : " + attrRes);
+
+            if (attrName.equals("inAnimation")) {
+                int resource = attrs.getAttributeResourceValue(i, 0);
+                if (resource > 0) {
+                    setInAnimation(context, resource);
+                } else {
+                    setInAnimation(getDefaultInAnimation());
+                }
+            } else if (attrName.equals("outAnimation")) {
+                int resource = attrs.getAttributeResourceValue(i, 0);
+                if (resource > 0) {
+                    setOutAnimation(context, resource);
+                } else {
+                    setOutAnimation(getDefaultOutAnimation());
+                }
+            } else if (attrName.equals("animateFirstView")) {
+                boolean flag = attrs.getAttributeBooleanValue(i, false);
+                setAnimateFirstView(flag);
+            } else if (attrName.equals("loopViews")) {
+                mLoopViews = attrs.getAttributeBooleanValue(i, false);
+            }
         }
-
-        resource = a.getResourceId(R.styleable.AdapterViewAnimator_outAnimation, 0);
-        if (resource > 0) {
-            setOutAnimation(context, resource);
-        } else {
-            setOutAnimation(getDefaultOutAnimation());
-        }
-
-        boolean flag = a.getBoolean(R.styleable.AdapterViewAnimator_animateFirstView, true);
-        setAnimateFirstView(flag);
-
-        mLoopViews = a.getBoolean(R.styleable.AdapterViewAnimator_loopViews, false);
-
-        a.recycle();
 
         initViewAnimator();
     }
@@ -874,7 +883,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #setInAnimation(android.animation.ObjectAnimator)
      * @see #setInAnimation(android.content.Context, int)
      */
-    public ObjectAnimator getInAnimation() {
+    public Animator getInAnimation() {
         return mInAnimation;
     }
 
@@ -886,7 +895,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #getInAnimation()
      * @see #setInAnimation(android.content.Context, int)
      */
-    public void setInAnimation(ObjectAnimator inAnimation) {
+    public void setInAnimation(Animator inAnimation) {
         mInAnimation = inAnimation;
     }
 
@@ -898,7 +907,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #setOutAnimation(android.animation.ObjectAnimator)
      * @see #setOutAnimation(android.content.Context, int)
      */
-    public ObjectAnimator getOutAnimation() {
+    public Animator getOutAnimation() {
         return mOutAnimation;
     }
 
@@ -910,7 +919,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #getOutAnimation()
      * @see #setOutAnimation(android.content.Context, int)
      */
-    public void setOutAnimation(ObjectAnimator outAnimation) {
+    public void setOutAnimation(Animator outAnimation) {
         mOutAnimation = outAnimation;
     }
 
@@ -924,7 +933,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #setInAnimation(android.animation.ObjectAnimator)
      */
     public void setInAnimation(Context context, int resourceID) {
-        setInAnimation((ObjectAnimator) AnimatorInflater.loadAnimator(context, resourceID));
+        setInAnimation(AnimatorInflater.loadAnimator(context, resourceID));
     }
 
     /**
@@ -937,7 +946,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
      * @see #setOutAnimation(android.animation.ObjectAnimator)
      */
     public void setOutAnimation(Context context, int resourceID) {
-        setOutAnimation((ObjectAnimator) AnimatorInflater.loadAnimator(context, resourceID));
+        setOutAnimation(AnimatorInflater.loadAnimator(context, resourceID));
     }
 
     /**

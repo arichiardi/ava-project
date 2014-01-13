@@ -1,13 +1,16 @@
 package com.andrearichiardi.android.avasample;
 
+import java.lang.reflect.Field;
+
 import android.app.Activity;
-import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.andrearichiardi.android.avabackport.widget.AdapterViewFlipper;
 
@@ -22,14 +25,19 @@ public class AvaSampleActivity extends Activity {
     AdapterViewFlipper mFlipper;
     Button mButton;
     CheckBox mCheckBox;
-    
+    TextView mTextView;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        Debug.waitForDebugger();
         setContentView(R.layout.sample_layout);
 
         mFlipper=(AdapterViewFlipper)findViewById(R.id.flipper);
         mFlipper.setAdapter(new ArrayAdapter<String>(this, R.layout.sample_list_item, items));
+
+        mTextView = (TextView)findViewById(R.id.flipIntervalText);
+        mTextView.setText("Flip Interval: " + String.valueOf(getFlipperFlipInterval()));
 
         mButton=(Button)findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +46,7 @@ public class AvaSampleActivity extends Activity {
                 mFlipper.advance();
             }
         });
-        
+
         mCheckBox=(CheckBox)findViewById(R.id.checkbox);
         mCheckBox.setChecked(getFlipperAutostart());
         mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -47,19 +55,79 @@ public class AvaSampleActivity extends Activity {
                 if (isChecked == true) mFlipper.startFlipping(); else mFlipper.stopFlipping();
             }
         });
+
+
     }
-    
+
     public boolean getFlipperAutostart() {
-        TypedArray arr = mFlipper.getResources().obtainTypedArray(R.attr.autoStart);
-        boolean b = arr.getBoolean(R.styleable.AdapterViewFlipper_autoStart,false);
-        arr.recycle();
-        return b;
+        boolean ret = false;
+        try {
+            Field autoStart = AdapterViewFlipper.class.getDeclaredField("mAutoStart");
+            autoStart.setAccessible(true);
+            ret  = autoStart.getBoolean(mFlipper);
+        } catch (SecurityException e) {
+            new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    public int getFlipperFlipInterval() {
+        int ret = 0;
+        try {
+            Field flipInterval = AdapterViewFlipper.class.getDeclaredField("mFlipInterval");
+            flipInterval.setAccessible(true);
+            ret = flipInterval.getInt(mFlipper);
+        } catch (SecurityException e) {
+            new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            new RuntimeException(e);
+        }
+        return ret;
     }
     
-    public int getFlipperFlipInterval() {
-        TypedArray arr = mFlipper.getResources().obtainTypedArray(R.attr.flipInterval);
-        int i = arr.getInteger(R.styleable.AdapterViewFlipper_flipInterval, 0);
-        arr.recycle();
-        return i;
+    public boolean getFlipperAnimateFirstTime() {
+        boolean ret = false;
+        try {
+            Field animateFirstTime = AdapterViewFlipper.class.getDeclaredField("mAnimateFirstTime");
+            animateFirstTime.setAccessible(true);
+            ret  = animateFirstTime.getBoolean(mFlipper);
+        } catch (SecurityException e) {
+            new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            new RuntimeException(e);
+        }
+        return ret;
+    }
+    
+    public boolean getFlipperLoopViews() {
+        boolean ret = false;
+        try {
+            Field autoStart = AdapterViewFlipper.class.getDeclaredField("mLoopViews");
+            autoStart.setAccessible(true);
+            ret  = autoStart.getBoolean(mFlipper);
+        } catch (SecurityException e) {
+            new RuntimeException(e);
+        } catch (NoSuchFieldException e) {
+            new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            new RuntimeException(e);
+        }
+        return ret;
     }
 }

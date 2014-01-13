@@ -3,9 +3,9 @@
     
     <declare-styleable name="AdapterViewAnimator">
         <!-- Identifier for the animation to use when a view is shown. -->
-        <attr name="inAnimation"  format="reference"/>
+        <attr name="inAnimation" format="reference"/>
         <!-- Identifier for the animation to use when a view is hidden. -->
-        <attr name="outAnimation"  format="reference"/>
+        <attr name="outAnimation" format="reference"/>
         <!--Defines whether the animator loops to the first view once it
         has reached the end of the list. -->
         <attr name="loopViews" format="boolean" />
