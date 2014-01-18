@@ -12,7 +12,7 @@ A port of AdapterViewAnimator and AdapterViewFlipper to &lt; 11 Android. Some ra
  - It is left to the developer to either branch with the classic ```if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) ...```.
  - Animation package provided by [NineOldAndroids](https://github.com/JakeWharton/NineOldAndroids).
  
-The library is in the apklib format but given the limited number of resources added by this project, and to avoid [this](https://groups.google.com/forum/#!msg/actionbarsherlock/i6fGbZn-m_M/YZTkzn5XIhQJ), a jar package is provided.
+The library is in the apklib format but given the limited number of resources added by this project, and to avoid [this](https://groups.google.com/forum/#!msg/actionbarsherlock/i6fGbZn-m_M/YZTkzn5XIhQJ), a jar package will be provided.
 If you use the jar file, don't forget to manually merge the included ```attrs.xml```.
 
 The provided AdapterViewAnimator and AdapterViewFlipper both use their own custom attributes.
@@ -40,7 +40,7 @@ The correct way to use them in a layout if the package is imported as apklib is
 </RelativeLayout>
 ```
 
-To include AdapterViewAnimator backport to your project add to your Maven pom.xml (soon on Maven central):
+To include AdapterViewAnimator backport to your project add to your Maven pom.xml:
 
 ```
 <dependency>
