@@ -3,9 +3,15 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    
     <groupId>com.andrearichiardi.android</groupId>
     <artifactId>ava-project</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>AdapterViewAnimator Project</name>
     <url>https://github.com/arichiardi/ava-backport</url>
     <description>AdapterViewAnimator port to Android API &lt; 11.</description>
@@ -100,37 +106,16 @@
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
                     <version>3.8.3-SNAPSHOT</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-                        <resourceDirectory>${project.basedir}/res</resourceDirectory>
-                        <extractDuplicates>true</extractDuplicates>
-                        <apk.debug>true</apk.debug>
-                        <sdk>
-                            <platform>${android.platform}</platform>
-                        </sdk>
-                        <deleteConflictingFiles>true</deleteConflictingFiles>
-                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                        <aaptExtraArg>-v</aaptExtraArg>
-                        <!-- <aaptExtraArg>-0</aaptExtraArg> <aaptExtraArg>zip</aaptExtraArg> -->
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>2.9</version>
-                    <configuration>
-                        <description>${project.description}</description>
-                        <verbose>true</verbose>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <phase>package</phase>
-                        </execution>
-                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -151,7 +136,7 @@
     <developers>
         <developer>
             <name>Andrea Richiardi</name>
-            <email>andrea.richiardi@gmail.com</email>
+            <email>a.richiardi.work@gmail.com</email>
             <id>andrea.richiardi</id>
             <url>www.andrearichiardi.com</url>
             <timezone>-5</timezone>
@@ -160,5 +145,28 @@
             </roles>
         </developer>
     </developers>
-
+    
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

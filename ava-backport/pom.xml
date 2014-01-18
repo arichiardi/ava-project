@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.andrearichiardi.android</groupId>
         <artifactId>ava-project</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>ava-backport</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>AdapterViewAnimator Apklib</name>
     <description>AdapterViewAnimator port to Android API &lt; 11.</description>
     <url>https://github.com/arichiardi/ava-backport</url>
@@ -58,6 +58,17 @@
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                    <extractDuplicates>true</extractDuplicates>
+                    <sdk>
+                        <platform>${android.platform}</platform>
+                    </sdk>
+                    <deleteConflictingFiles>true</deleteConflictingFiles>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,13 +101,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin> <groupId>com.google.code.maven-replacer-plugin</groupId> 
-                <artifactId>maven-replacer-plugin</artifactId> <executions> <execution> <phase>process-sources</phase> 
-                <goals> <goal>replace</goal> </goals> </execution> </executions> <configuration> 
-                <ignoreMissingFile>false</ignoreMissingFile> <file>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</file> 
-                <outputFile>target/generated-sources/r/com/andrearichiardi/android/avabackport/R.java</outputFile> 
-                <regex>false</regex> <token>static final int</token> <value>static int</value> 
-                </configuration> </plugin> -->
         </plugins>
     </build>
 
